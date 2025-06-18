@@ -2,7 +2,7 @@
 
 A dynamic web application that combines **Zora API** data with **Cloudflare Workers AI** to create unique AI-powered digital art from coin information. Discover, generate, and explore the future of digital art with cutting-edge AI technology.
 
-![Zora AI Gallery](https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
+![Zora AI Gallery](https://i.ibb.co/PGwwJ7Wn/synergy-art-cyberpunk-1750286860879.png)
 
 ## ✨ Features
 
