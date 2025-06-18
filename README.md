@@ -56,7 +56,7 @@ In the Vercel set the Environment Variables:
 1. Navigate to the "AI Synergy Art Generator" section
 2. Select a coin list type (e.g., "NEW", "TOP_GAINERS")
 3. Choose an art style (e.g., "Cyberpunk", "Fantasy")
-4. Click "Generate Synergy Art" (Using data from the last 100 coins of the selected type)
+4. Click "Generate Synergy Art" (Using data from the last 50 coins of the selected type)
 5. Wait for the AI to process and generate the artwork
 6. Download the generated image using the download button
 

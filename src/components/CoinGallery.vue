@@ -29,40 +29,54 @@
       <p>Try selecting a different list type</p>
     </div>
 
-    <div v-else class="gallery-grid">
-      <div 
-        v-for="coin in displayCoins" 
-        :key="coin.contractAddress"
-        class="coin-card"
-        @click="openCoin(coin.contractAddress)"
-      >
-        <div class="coin-image-container">
-          <img 
-            :src="coin.imageUrl" 
-            :alt="coin.name"
-            class="coin-image"
-            @error="handleImageError"
-          />
-          <div class="coin-overlay">
-            <div class="coin-details">
-              <h3 class="coin-name">{{ coin.name }}</h3>
-              <p class="coin-symbol">{{ coin.creator }}</p>
-              <p class="coin-description">{{ truncateDescription(coin.description) }}</p>
-              <div class="coin-stats" >
-                <span  class="volume">
-                  Vol: ${{ formatNumber(coin.volume || 0) }}
-                </span>
-                <span 
-                  v-if="coin.priceChange" 
-                  class="price-change"
-                  :class="{ 'positive': coin.priceChange > 0, 'negative': coin.priceChange < 0 }"
-                >
-                  {{ coin.priceChange > 0 ? '+' : '' }}{{ coin.priceChange.toFixed(2) }}%
-                </span>
+    <div v-else>
+      <div class="gallery-grid">
+        <div 
+          v-for="coin in displayCoins" 
+          :key="coin.contractAddress"
+          class="coin-card"
+          @click="openCoin(coin.contractAddress)"
+        >
+          <div class="coin-image-container">
+            <img 
+              :src="coin.imageUrl" 
+              :alt="coin.name"
+              class="coin-image"
+              @error="handleImageError"
+            />
+            <div class="coin-overlay">
+              <div class="coin-details">
+                <h3 class="coin-name">{{ coin.name }}</h3>
+                <p class="coin-symbol">{{ coin.creator }}</p>
+                <p class="coin-description">{{ truncateDescription(coin.description) }}</p>
+                <div class="coin-stats" >
+                  <span  class="volume">
+                    Vol: ${{ formatNumber(coin.volume || 0) }}
+                  </span>
+                  <span 
+                    v-if="coin.priceChange" 
+                    class="price-change"
+                    :class="{ 'positive': coin.priceChange > 0, 'negative': coin.priceChange < 0 }"
+                  >
+                    {{ coin.priceChange > 0 ? '+' : '' }}{{ coin.priceChange.toFixed(2) }}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      
+      <!-- Load More Button -->
+      <div v-if="hasMoreCoins" class="load-more-container">
+        <button 
+          @click="loadMore" 
+          :disabled="loadingMore"
+          class="load-more-button"
+        >
+          <span v-if="loadingMore" class="loading-spinner-small"></span>
+          {{ loadingMore ? 'Loading...' : 'Load More...' }}
+        </button>
       </div>
     </div>
   </div>
@@ -77,12 +91,37 @@ import type { ListType } from '../types';
 const { coins, loading, error, fetchCoins } = useZoraAPI();
 
 const selectedListType = ref<ListType>('NEW');
+const displayedCount = ref(12);
+const loadingMore = ref(false);
 
-// Display only the first 12 coins
-const displayCoins = computed(() => coins.value.slice(0, 12));
+// Display coins based on displayedCount
+const displayCoins = computed(() => coins.value.slice(0, displayedCount.value));
+
+// Check if there are more coins to load
+const hasMoreCoins = computed(() => displayedCount.value < coins.value.length);
 
 const updateGallery = async () => {
-  await fetchCoins(selectedListType.value, 12);
+  displayedCount.value = 12; // Reset to initial count
+  await fetchCoins(selectedListType.value, 50); // Fetch more coins initially
+};
+
+const loadMore = async () => {
+  if (loadingMore.value) return;
+  
+  loadingMore.value = true;
+  
+  // Simulate loading delay for better UX
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Load 12 more coins
+  displayedCount.value += 12;
+  
+  // If we're running low on coins, fetch more from API
+  //f (displayedCount.value >= coins.value.length - 12) {
+   // await fetchCoins(selectedListType.value, coins.value.length + 50);
+  //}
+  
+  loadingMore.value = false;
 };
 
 const openCoin = (contractAddress: string) => {
@@ -191,6 +230,17 @@ onMounted(() => {
   margin: 0 auto 16px;
 }
 
+.loading-spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
 .error-icon,
 .empty-icon {
   font-size: 3rem;
@@ -218,6 +268,40 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+  margin-bottom: 32px;
+}
+
+.load-more-container {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.load-more-button {
+  padding: 14px 32px;
+  background: linear-gradient(45deg, #ff0080, #00d4ff);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 0, 128, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+}
+
+.load-more-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 0, 128, 0.4);
+}
+
+.load-more-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .coin-card {
@@ -362,6 +446,12 @@ onMounted(() => {
       rgba(0, 0, 0, 0.8) 0%,
       transparent 100%
     );
+  }
+  
+  .load-more-button {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    min-width: 140px;
   }
 }
 

@@ -106,7 +106,7 @@ const generateArt = async () => {
   
   try {
     // Fetch coins for the selected list type
-    await fetchCoins(selectedListType.value, 100);
+    await fetchCoins(selectedListType.value, 50);
     
     if (coins.value.length === 0) {
       error.value = 'No coins found for the selected list type';
