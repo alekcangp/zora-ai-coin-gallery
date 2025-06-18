@@ -24,8 +24,8 @@ export default async function handler(req, res) {
       return;
     }
     
-    const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
-    const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+    const CLOUDFLARE_ACCOUNT_ID = process.env.VITE_CLOUDFLARE_ACCOUNT_ID;
+    const CLOUDFLARE_API_TOKEN = process.env.VITE_CLOUDFLARE_API_TOKEN;
     
     if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
       res.status(500).json({ error: 'Cloudflare credentials not configured' });

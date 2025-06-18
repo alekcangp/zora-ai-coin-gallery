@@ -78,11 +78,11 @@ const { coins, loading, error, fetchCoins } = useZoraAPI();
 
 const selectedListType = ref<ListType>('NEW');
 
-// Display only the first 10 coins
-const displayCoins = computed(() => coins.value.slice(0, 10));
+// Display only the first 12 coins
+const displayCoins = computed(() => coins.value.slice(0, 12));
 
 const updateGallery = async () => {
-  await fetchCoins(selectedListType.value, 10);
+  await fetchCoins(selectedListType.value, 12);
 };
 
 const openCoin = (contractAddress: string) => {

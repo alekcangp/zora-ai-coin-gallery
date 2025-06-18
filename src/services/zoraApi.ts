@@ -12,8 +12,8 @@ export const zoraApi = {
     try {
       const response = await api.get(`/explore?listType=${listType}&count=${count}`);
       
-      // Mock response structure - replace with actual Zora API response mapping
-      return response.data?.exploreList?.edges?.map((coin: any) => {
+      const data = response.data as { exploreList?: { edges?: any[] } };
+      return data.exploreList?.edges?.map((coin: any) => {
         const volumeValue = parseFloat(coin.node.totalVolume);
         
         return {

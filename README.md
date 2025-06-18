@@ -36,60 +36,18 @@ A dynamic web application that combines **Zora API** data with **Cloudflare Work
 
 **Production Site**: [https://zora-ai-coin-gallery.vercel.app/](https://zora-ai-coin-gallery.vercel.app/)
 
-## 📦 Installation & Setup
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Cloudflare account with Workers AI access
-- Zora API access
-
-### 1. Clone the Repository
-```bash
-git clone <your-repo-url>
-cd zora-ai-coin-gallery
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Environment Configuration
-Create a `.env` file in the root directory:
-```env
-# Cloudflare AI Configuration
-CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
-CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
-
-
-### 5. Development
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
 
 ## 🚀 Deployment
 
 ### Vercel Deployment (Recommended)
-1. Install Vercel CLI: `npm i -g vercel`
-2. Deploy: `vercel --prod`
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/import?s=https://github.com/alekcangp/zora-ai-coin-gallery&env=VITE_CLOUDFLARE_ACCOUNT_ID,VITE_CLOUDFLARE_API_TOKEN)
 
-### Manual Deployment
-```bash
-# Build the project
-npm run build
+In the Vercel set the Environment Variables:
 
-# Deploy to Vercel
-npx vercel --prod
-```
+- `VITE_CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id`  
+- `VITE_CLOUDFLARE_API_TOKEN=your_cloudflare_api_token`    
 
 
 ## 🎨 Usage Guide

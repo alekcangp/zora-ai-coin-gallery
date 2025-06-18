@@ -42,8 +42,8 @@ const isUpdating = ref(false);
 const isPaused = ref(false);
 const countdown = ref(60);
 
-let refreshInterval: number;
-let countdownInterval: number;
+let refreshInterval: ReturnType<typeof setInterval>;
+let countdownInterval: ReturnType<typeof setInterval>;
 
 const displayCoins = computed(() => {
   // Duplicate coins for seamless scrolling

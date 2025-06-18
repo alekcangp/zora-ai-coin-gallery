@@ -24,8 +24,8 @@ export const ZORA_API_BASE = 'https://api-sdk.zora.engineering';
 export const ZORA_COIN_BASE = 'https://zora.co/coin';
 
 // Cloudflare credentials should be set as environment variables
-export const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
-export const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN || '';
+export const CLOUDFLARE_ACCOUNT_ID = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_ID || '';
+export const CLOUDFLARE_API_TOKEN = import.meta.env.VITE_CLOUDFLARE_API_TOKEN || '';
 export const CLOUDFLARE_AI_BASE = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run`;
 
 export const REFRESH_INTERVAL = 60000; // 60 seconds
