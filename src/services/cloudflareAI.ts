@@ -11,7 +11,7 @@ export const cloudflareAI = {
         body: JSON.stringify({
           endpoint: '@cf/facebook/bart-large-cnn',
           data: { 
-            input_text: text// .substring(0, 1000), default: 1024 // Limit text length for better processing
+            input_text: text,
           }
         }),
       });
@@ -46,6 +46,7 @@ export const cloudflareAI = {
         body: JSON.stringify({
           //@cf/bytedance/stable-diffusion-xl-lightning
           //@cf/stabilityai/stable-diffusion-xl-base-1.0
+          //@cf/black-forest-labs/flux-1-schnell // $
           endpoint: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
           data: { 
             prompt: styledPrompt,

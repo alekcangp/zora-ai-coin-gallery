@@ -52,14 +52,43 @@ export function useAIGeneration() {
     error.value = null;
 
     try {
-      // Combine all descriptions
-      const allDescriptions = coins
-        .map(coin => coin.description)
-        .join(' ')
-        .substring(0, 5000); // Limit total text
+       // Shuffle an array
+       for (let i = coins.length - 1; i > 0; i--) {
+         const j = Math.floor(Math.random() * (i + 1)); // Pick a random index between 0 and i (inclusive)
+         [coins[i], coins[j]] = [coins[j], coins[i]];   // Swap elements
+       }
+     
+   // Combine all descriptions
+  const smallDesc = coins
+       .map(coin => coin.description)
+       .filter(desc => desc.length >= 20)
+       .filter(desc => desc.length < 50)
+       .join('. ')
 
+  const midlDesc = coins
+       .map(coin => coin.description)
+       .filter(desc => desc.length >= 50)
+       .filter(desc => desc.length < 350)
+       .join('. ')
+
+  const bigDesc = coins
+       .map(coin => coin.description)
+       .filter(desc => desc.length >= 350)
+       .join('. ')
+/*
+   const allDescriptions = coins
+     .map(coin => coin.description)
+     .filter(desc => desc.length >= 50)
+     .map(desc => desc.substring(0, 200))
+     .join('. ')
+     .substring(0, 3000); // Limit total text
+*/
       // Summarize the combined text
-      const summary = await cloudflareAI.summarizeText(allDescriptions);
+      const smallSummary = await cloudflareAI.summarizeText(smallDesc);
+      const midlSummary = await cloudflareAI.summarizeText(midlDesc);
+      const bigSummary = await cloudflareAI.summarizeText(bigDesc);
+
+      const summary = `${bigSummary} ${midlSummary} ${smallSummary}`
       
       // Generate image from summary
       const imageData = await cloudflareAI.generateImage(summary, style);
