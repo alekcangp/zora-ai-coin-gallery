@@ -1,3 +1,29 @@
 {
-  "version": 2
+  "version": 2,
+  "functions": {
+    "api/ai-proxy.js": {
+      "maxDuration": 60
+    },
+    "api/ipfs-upload.js": {
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/favicon.svg"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 } 

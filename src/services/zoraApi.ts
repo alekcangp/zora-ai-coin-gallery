@@ -1,9 +1,8 @@
 import axios from 'axios';
 import type { ZoraCoin, ListType } from '../types';
-import { ZORA_API_BASE } from '../utils/constants';
 
 const api = axios.create({
-  baseURL: ZORA_API_BASE,
+  baseURL: 'https://api-sdk.zora.engineering',
   timeout: 10000,
 });
 
@@ -20,16 +19,19 @@ export const zoraApi = {
           contractAddress: coin.node.address,
           name: coin.node.name || coin.node.symbol,
           description: coin.node.description || coin.node.name || 'No description available',
-          imageUrl: coin.node.mediaContent.previewImage.medium,
+          imageUrl: coin.node.mediaContent?.previewImage?.medium,
           symbol: coin.node.symbol,
           createdAt: coin.node.createdAt,
           volume: !isNaN(volumeValue) ? volumeValue : 0,
           priceChange: 0,
-          creator: coin.node.creatorProfile.handle
+          creator: coin.node.creatorProfile?.handle
         };
       }) || [];
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching coins:', error);
+      if (error?.response?.status === 500) {
+        throw new Error('Server error (500) - API temporarily unavailable');
+      }
       // Return mock data for development
       return generateMockCoins(count, listType);
     }

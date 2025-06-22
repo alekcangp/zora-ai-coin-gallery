@@ -7,8 +7,8 @@ export const LIST_TYPES: { value: ListType; label: string }[] = [
   { value: 'MOST_VALUABLE', label: 'Most Valuable' },
   { value: 'LAST_TRADED', label: 'Last Traded' },
   { value: 'LAST_TRADED_UNIQUE', label: 'Last Traded Unique' },
-  { value: 'FEATURED', label: 'Featured' },
-  { value: 'FEATURED_VIDEOS', label: 'Featured Videos' },
+  { value: 'FEATURED', label: 'Featured Coins' },
+  { value: 'FEATURED_VIDEOS', label: 'Featured Videos' }
 ];
 
 export const ART_STYLES: { value: ArtStyle; label: string }[] = [
@@ -24,8 +24,8 @@ export const ZORA_API_BASE = 'https://api-sdk.zora.engineering';
 export const ZORA_COIN_BASE = 'https://zora.co/coin';
 
 // Cloudflare credentials should be set as environment variables
-export const CLOUDFLARE_ACCOUNT_ID = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_ID || '';
-export const CLOUDFLARE_API_TOKEN = import.meta.env.VITE_CLOUDFLARE_API_TOKEN || '';
-export const CLOUDFLARE_AI_BASE = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run`;
+//export const CLOUDFLARE_ACCOUNT_ID = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_ID || '';
+//export const CLOUDFLARE_API_TOKEN = import.meta.env.VITE_CLOUDFLARE_API_TOKEN || '';
+//export const CLOUDFLARE_AI_BASE = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run`;
 
 export const REFRESH_INTERVAL = 60000; // 60 seconds

@@ -3,12 +3,12 @@
     <div class="gallery-header">
       <h2 class="gallery-title">💎 Coin Gallery</h2>
       <div class="gallery-controls">
-        <select v-model="selectedListType" @change="updateGallery" class="gallery-select">
+        <select v-model="selectedListType" class="gallery-select">
           <option v-for="type in LIST_TYPES" :key="type.value" :value="type.value">
             {{ type.label }}
           </option>
         </select>
-        <span class="coin-count">{{ displayCoins.length }} coins</span>
+        <span class="coin-count">{{ coins.length }} coins</span>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
       <button @click="updateGallery" class="retry-button">Try Again</button>
     </div>
 
-    <div v-else-if="displayCoins.length === 0" class="empty-state">
+    <div v-else-if="coins.length === 0" class="empty-state">
       <div class="empty-icon">🔍</div>
       <h3>No coins found</h3>
       <p>Try selecting a different list type</p>
@@ -32,7 +32,7 @@
     <div v-else>
       <div class="gallery-grid">
         <div 
-          v-for="coin in displayCoins" 
+          v-for="coin in coins" 
           :key="coin.contractAddress"
           class="coin-card"
           @click="openCoin(coin.contractAddress)"
@@ -66,62 +66,74 @@
           </div>
         </div>
       </div>
-      
-      <!-- Load More Button -->
-      <div v-if="hasMoreCoins" class="load-more-container">
-        <button 
-          @click="loadMore" 
-          :disabled="loadingMore"
-          class="load-more-button"
-        >
-          <span v-if="loadingMore" class="loading-spinner-small"></span>
-          {{ loadingMore ? 'Loading...' : 'Load More...' }}
-        </button>
+      <div v-if="loadingMore" class="infinite-spinner-container">
+        <div class="loading-spinner"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useZoraAPI } from '../composables/useApi';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import axios from 'axios';
 import { LIST_TYPES, ZORA_COIN_BASE } from '../utils/constants';
-import type { ListType } from '../types';
-
-const { coins, loading, error, fetchCoins } = useZoraAPI();
+import type { ListType, ZoraCoin } from '../types';
 
 const selectedListType = ref<ListType>('NEW');
-const displayedCount = ref(12);
+const coins = ref<ZoraCoin[]>([]);
+const loading = ref(false);
 const loadingMore = ref(false);
+const error = ref<string | null>(null);
+const nextCursor = ref<string | null>(null);
 
-// Display coins based on displayedCount
-const displayCoins = computed(() => coins.value.slice(0, displayedCount.value));
-
-// Check if there are more coins to load
-const hasMoreCoins = computed(() => displayedCount.value < coins.value.length);
-
-const updateGallery = async () => {
-  displayedCount.value = 12; // Reset to initial count
-  await fetchCoins(selectedListType.value, 50); // Fetch more coins initially
-};
-
-const loadMore = async () => {
-  if (loadingMore.value) return;
-  
-  loadingMore.value = true;
-  
-  // Simulate loading delay for better UX
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Load 12 more coins
-  displayedCount.value += 12;
-  
-  // If we're running low on coins, fetch more from API
-  //f (displayedCount.value >= coins.value.length - 12) {
-   // await fetchCoins(selectedListType.value, coins.value.length + 50);
-  //}
-  
-  loadingMore.value = false;
+const fetchCoins = async (isInitial = false) => {
+  if (loading.value || loadingMore.value) return;
+  if (isInitial) loading.value = true;
+  else loadingMore.value = true;
+  error.value = null;
+  try {
+    const params: any = { 
+      listType: selectedListType.value, 
+      count: 20 
+    };
+    if (!isInitial && nextCursor.value) {
+      params.after = nextCursor.value;
+    }
+    
+    const response = await axios.get('https://api-sdk.zora.engineering/explore', { params });
+    const data = response.data as { exploreList?: { edges?: any[], pageInfo?: { endCursor?: string } } };
+    const newCoins = (data.exploreList?.edges || []).map((edge: any) => ({
+      contractAddress: edge.node.address,
+      name: edge.node.name || edge.node.symbol,
+      description: edge.node.description || edge.node.name || 'No description available',
+      imageUrl: edge.node.mediaContent?.previewImage?.medium,
+      symbol: edge.node.symbol,
+      createdAt: edge.node.createdAt,
+      volume: parseFloat(edge.node.totalVolume) || 0,
+      priceChange: 0,
+      creator: edge.node.creatorProfile?.handle
+    }));
+    if (isInitial) coins.value = newCoins;
+    else coins.value.push(...newCoins);
+    nextCursor.value = data.exploreList?.pageInfo?.endCursor || null;
+  } catch (err: any) {
+    console.error('API Error:', err);
+    if (err?.response?.status === 500) {
+     // error.value = 'Server error (500) - API temporarily unavailable';
+      loading.value = false;
+      loadingMore.value = false;
+      nextCursor.value = null;
+    } else {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch coins';
+    }
+    
+  } finally {
+    
+      loading.value = false;
+      loadingMore.value = false;
+   
+    
+  }
 };
 
 const openCoin = (contractAddress: string) => {
@@ -148,7 +160,32 @@ const handleImageError = (event: Event) => {
   img.src = 'https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop';
 };
 
+const onScroll = () => {
+  if (loadingMore.value || loading.value || !nextCursor.value || error.value?.includes('500')) return;
+  const scrollY = window.scrollY || window.pageYOffset;
+  const windowHeight = window.innerHeight;
+  const docHeight = document.documentElement.offsetHeight;
+  if (windowHeight + scrollY >= docHeight - 300) {
+    fetchCoins(false);
+  }
+};
+
+const updateGallery = async () => {
+  coins.value = [];
+  nextCursor.value = null;
+  error.value = null;
+  await fetchCoins(true);
+};
+
 onMounted(() => {
+  fetchCoins(true);
+  window.addEventListener('scroll', onScroll);
+});
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll);
+});
+
+watch(selectedListType, () => {
   updateGallery();
 });
 </script>
@@ -459,5 +496,13 @@ onMounted(() => {
   .gallery-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.infinite-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 0 0 0;
+  width: 100%;
 }
 </style>

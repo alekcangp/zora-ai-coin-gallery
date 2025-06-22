@@ -7,7 +7,7 @@
         <div class="header-content">
           <h1 class="app-title">
             <span class="title-icon">🚀</span>
-            Zora AI Gallery
+            Zora AI Studio
           </h1>
           <p class="app-subtitle">
             Discover, Generate, and Explore the Future of Digital Art
@@ -17,6 +17,7 @@
 
       <main class="app-main">
         <CoinTicker />
+        <AutocreateCoin />
         <SynergyArt />
         <CoinGallery />
       </main>
@@ -39,6 +40,7 @@
 <script setup lang="ts">
 import AnimatedBackground from './components/AnimatedBackground.vue';
 import CoinTicker from './components/CoinTicker.vue';
+import AutocreateCoin from './components/AutocreateCoin.vue';
 import SynergyArt from './components/SynergyArt.vue';
 import CoinGallery from './components/CoinGallery.vue';
 </script>

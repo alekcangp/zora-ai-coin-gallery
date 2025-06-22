@@ -24,12 +24,24 @@ export default async function handler(req, res) {
       return;
     }
     
-    const CLOUDFLARE_ACCOUNT_ID = process.env.VITE_CLOUDFLARE_ACCOUNT_ID;
-    const CLOUDFLARE_API_TOKEN = process.env.VITE_CLOUDFLARE_API_TOKEN;
+    const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+    const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
     
     if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
       res.status(500).json({ error: 'Cloudflare credentials not configured' });
       return;
+    }
+
+    // For image analysis, optimize the image data if it's too large
+    let optimizedData = data;
+    if (data.image && Array.isArray(data.image) && data.image.length > 1000000) {
+      // If image data is too large (>1MB), compress it
+      console.log('Image data too large, compressing...');
+      // Take every 2nd pixel to reduce size (simple downsampling)
+      optimizedData = {
+        ...data,
+        image: data.image.filter((_, index) => index % 2 === 0)
+      };
     }
     
     const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/${endpoint}`, {
@@ -38,7 +50,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(optimizedData),
     });
 
     // Check if response is ok

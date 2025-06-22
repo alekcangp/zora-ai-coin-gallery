@@ -158,7 +158,9 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 200px;
+  max-width: 280px;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .ticker-item:hover {
@@ -171,32 +173,43 @@ onUnmounted(() => {
 .coin-image {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 8px;
   overflow: hidden;
   border: 2px solid rgba(0, 255, 136, 0.3);
+  flex-shrink: 0;
 }
 
 .coin-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .coin-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .coin-name {
   font-weight: 600;
   color: #fff;
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .coin-symbol {
   font-size: 0.8rem;
   color: #00d4ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @keyframes scroll {

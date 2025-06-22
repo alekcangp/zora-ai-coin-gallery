@@ -33,10 +33,10 @@
       >
         <span v-if="generating" class="button-content">
           <div class="spinner"></div>
-          Generating...
+          {{ generatingStep }}
         </span>
         <span v-else class="button-content">
-          ✨ Generate Synergy Art
+          ✨ Generate Art
         </span>
       </button>
     </div>
@@ -90,7 +90,7 @@ import { LIST_TYPES, ART_STYLES } from '../utils/constants';
 import type { ListType, ArtStyle } from '../types';
 
 const { coins, loading, error: apiError, fetchCoins } = useZoraAPI();
-const { generatedArt, generating, error: aiError, generateSynergyArt, downloadImage } = useAIGeneration();
+const { generatedArt, generating, generatingStep, error: aiError, generateSynergyArt, downloadImage } = useAIGeneration();
 
 const selectedListType = ref<ListType>('NEW');
 const selectedStyle = ref<ArtStyle>('Cyberpunk');
@@ -105,7 +105,7 @@ const generateArt = async () => {
   error.value = null;
   
   try {
-    // Fetch coins for the selected list type
+    // Always fetch fresh coins for the selected list type
     await fetchCoins(selectedListType.value, 50);
     
     if (coins.value.length === 0) {

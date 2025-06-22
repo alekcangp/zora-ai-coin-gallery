@@ -44,9 +44,7 @@ export const cloudflareAI = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          //@cf/bytedance/stable-diffusion-xl-lightning
-          //@cf/stabilityai/stable-diffusion-xl-base-1.0
-          //@cf/black-forest-labs/flux-1-schnell // $
+          // Use stable-diffusion-xl-base-1.0 model
           endpoint: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
           data: { 
             prompt: styledPrompt,
