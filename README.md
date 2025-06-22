@@ -49,25 +49,6 @@ Before deploying, you'll need:
 4. **Vercel Account** for deployment
 5. **MetaMask** wallet for blockchain interactions
 
-## 🔧 Environment Variables
-
-Set these environment variables in your Vercel dashboard:
-
-```bash
-# Cloudflare AI API (for image analysis and generation)
-CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
-CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
-
-# Zora API (for coin creation and validation)
-VITE_ZORA_API_KEY=your_zora_api_key
-
-# Pinata IPFS (for file uploads)
-PINATA_API_KEY=your_pinata_api_key
-PINATA_API_SECRET=your_pinata_api_secret
-
-# Optional: Set to 'production' for production builds
-NODE_ENV=production
-```
 
 ## 🚀 Deployment
 
