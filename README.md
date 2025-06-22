@@ -73,9 +73,17 @@ NODE_ENV=production
 
 ### Quick Deploy with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/import?s=https://github.com/alekcangp/zora-ai-coin-gallery)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/alekcangp/zora-ai-coin-gallery&env=CLOUDFLARE_ACCOUNT_ID,CLOUDFLARE_API_TOKEN,VITE_ZORA_API_KEY,PINATA_API_KEY,PINATA_API_SECRET&envDescription=Cloudflare%20AI%20API%20credentials%20for%20image%20analysis%20and%20generation&envLink=https://dash.cloudflare.com/profile/api-tokens)
 
-
+**Deployment Steps:**
+1. **Click the "Deploy with Vercel" button above**
+2. **Enter your environment variables** when prompted:
+   - `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare Account ID
+   - `CLOUDFLARE_API_TOKEN` - Your Cloudflare API Token
+   - `VITE_ZORA_API_KEY` - Your Zora API Key
+   - `PINATA_API_KEY` - Your Pinata API Key
+   - `PINATA_API_SECRET` - Your Pinata API Secret
+3. **Click Deploy** and your app will be live!
 
 ## 🎨 Usage Guide
 
