@@ -194,8 +194,8 @@
             <div class="warning-content">
               <span class="warning-icon">⚠️</span>
               <div class="warning-text">
-                <h4>Switch to Base Sepolia</h4>
-                <p>Please switch to Base Sepolia testnet in MetaMask</p>
+                <h4>Switch to Base Mainnet</h4>
+                <p>Please switch to Base in MetaMask</p>
               </div>
             </div>
           </div>
@@ -259,10 +259,10 @@
                 <div class="address-container">
                   <code class="coin-address">{{ createdCoin.address }}</code>
                   <a 
-                    :href="`https://sepolia.basescan.org/address/${createdCoin.address}`"
+                    :href="`https://basescan.org/address/${createdCoin.address}`"
                     target="_blank"
                     class="explorer-link"
-                    title="View on Base Sepolia Explorer"
+                    title="View on Base Explorer"
                   >
                     🔍
                   </a>
@@ -273,10 +273,10 @@
                 <div class="address-container">
                   <code class="tx-hash">{{ createdCoin.txHash }}</code>
                   <a 
-                    :href="`https://sepolia.basescan.org/tx/${createdCoin.txHash}`"
+                    :href="`https://basescan.org/tx/${createdCoin.txHash}`"
                     target="_blank"
                     class="explorer-link"
-                    title="View Transaction on Base Sepolia Explorer"
+                    title="View Transaction on Base Explorer"
                   >
                     🔍
                   </a>

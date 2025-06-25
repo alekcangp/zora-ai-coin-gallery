@@ -1,6 +1,6 @@
 # 🚀 Zora AI Studio
 
-A modern application for creating AI-powered cryptocurrencies on the Zora protocol using Base Sepolia testnet. Upload images, generate AI art, and create your own coins with advanced AI analysis.
+A modern application for creating AI-powered cryptocurrencies on the Zora protocol using Base. Upload images, generate AI art, and create your own coins with advanced AI analysis.
 
 ## ✨ Features
 
@@ -11,7 +11,7 @@ A modern application for creating AI-powered cryptocurrencies on the Zora protoc
 - **Multiple Art Styles**: Cyberpunk, Fantasy, Futuristic, Abstract, Retro Wave, Sci-Fi
 
 ### 💎 Coin Creation & Management
-- **Blockchain Integration**: Create coins on Base Sepolia testnet using Zora protocol
+- **Blockchain Integration**: Create coins on Base using Zora protocol
 - **IPFS Storage**: Automatic metadata and image upload to IPFS via Pinata
 - **Wallet Connection**: MetaMask integration with automatic network switching
 - **Transaction Tracking**: View coin addresses and transaction hashes
@@ -74,7 +74,7 @@ Before deploying, you'll need:
    - Click "Upload Coin Image" area and select an image file (PNG, JPG, GIF up to 10MB)
    - Click "Analyze with AI" to get coin suggestions
    - Review and edit the suggested name, symbol, and description
-   - Click "Create Coin" to deploy on Base Sepolia
+   - Click "Create Coin" to deploy on Base
 
 2. **Generate Mode**:
    - Enter a prompt describing your desired coin (max 120 characters)
@@ -95,11 +95,11 @@ Before deploying, you'll need:
 
 ## 🌐 Network Configuration
 
-The application is configured for **Base Sepolia testnet**:
+The application is configured for **Base**:
 
-- **Chain ID**: 84532
-- **RPC URL**: https://sepolia.base.org
-- **Explorer**: https://sepolia.basescan.org
+- **Chain ID**: 8453
+- **RPC URL**: https://mainnet.base.org
+- **Explorer**: https://basescan.org
 - **Native Currency**: ETH
 
 

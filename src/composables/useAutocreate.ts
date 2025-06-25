@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { createWalletClient, custom, createPublicClient, http } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import type { ImageAnalysisResult, CoinCreationData, CreatedCoin, CreationStatus } from '../types';
 import { setApiKey } from '@zoralabs/coins-sdk';
 
@@ -137,10 +137,10 @@ export function useWallet() {
     try {
       // Check current network first
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-      const targetChainId = `0x${baseSepolia.id.toString(16)}`; // Convert to hex format
+      const targetChainId = `0x${base.id.toString(16)}`; // Convert to hex format
       
       if (currentChainId !== targetChainId) {
-        // Try to switch to Base Sepolia
+        // Try to switch to Base mainnet
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
@@ -153,25 +153,25 @@ export function useWallet() {
               method: 'wallet_addEthereumChain',
               params: [{
                 chainId: targetChainId,
-                chainName: 'Base Sepolia',
+                chainName: 'Base',
                 nativeCurrency: {
                   name: 'ETH',
                   symbol: 'ETH',
                   decimals: 18,
                 },
-                rpcUrls: ['https://sepolia.base.org'],
-                blockExplorerUrls: ['https://sepolia.basescan.org'],
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org'],
               }],
             });
           } else {
-            throw new Error(`Please switch to Base Sepolia testnet in MetaMask. Current network: ${currentChainId}, Required: ${targetChainId}`);
+            throw new Error(`Please switch to Base mainnet in MetaMask. Current network: ${currentChainId}, Required: ${targetChainId}`);
           }
         }
       }
       
-      // Use Base Sepolia Testnet
+      // Use Base Mainnet
       const client = createWalletClient({
-        chain: baseSepolia,
+        chain: base,
         transport: custom(window.ethereum)
       });
       // Request accounts
@@ -181,14 +181,14 @@ export function useWallet() {
       walletConnected.value = true;
       // Re-create the wallet client with the account set
       walletClient.value = createWalletClient({
-        chain: baseSepolia,
+        chain: base,
         transport: custom(window.ethereum),
         account: accounts[0],
       });
-      // Set network name (Base Sepolia testnet)
-      networkName.value = 'Base Sepolia Testnet';
-      // Set public client for Base Sepolia testnet
-      publicClient.value = createPublicClient({ chain: baseSepolia, transport: http() });
+      // Set network name (Base Mainnet)
+      networkName.value = 'Base Mainnet';
+      // Set public client for Base Mainnet
+      publicClient.value = createPublicClient({ chain: base, transport: http() });
     } catch (error) {
       console.error('Wallet connection error:', error);
       throw new Error('Failed to connect wallet. Please try again.');
@@ -201,7 +201,7 @@ export function useWallet() {
       try {
         // Check current network
         const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-        const targetChainId = `0x${baseSepolia.id.toString(16)}`;
+        const targetChainId = `0x${base.id.toString(16)}`;
         
         if (currentChainId !== targetChainId) {
           console.warn(`Wallet connected to wrong network. Current: ${currentChainId}, Required: ${targetChainId}`);
@@ -209,7 +209,7 @@ export function useWallet() {
         }
         
         const client = createWalletClient({
-          chain: baseSepolia,
+          chain: base,
           transport: custom(window.ethereum)
         });
         const accounts = await client.requestAddresses();
@@ -228,19 +228,51 @@ export function useWallet() {
     
     try {
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-      const targetChainId = `0x${baseSepolia.id.toString(16)}`;
+      const targetChainId = `0x${base.id.toString(16)}`;
       
       return {
         currentChainId,
         targetChainId,
         isCorrectNetwork: currentChainId === targetChainId,
-        networkName: currentChainId === targetChainId ? 'Base Sepolia' : 'Unknown Network'
+        networkName: currentChainId === targetChainId ? 'Base' : 'Unknown Network'
       };
     } catch (error) {
       console.error('Error checking network:', error);
       return null;
     }
   };
+
+  // Add MetaMask event listeners for account and chain changes
+  if (typeof window !== 'undefined' && window.ethereum && !window.ethereum._zoraEventListenersAdded) {
+    window.ethereum.on('accountsChanged', async (accounts: string[]) => {
+      if (accounts.length > 0) {
+        walletAddress.value = accounts[0];
+        walletConnected.value = true;
+        networkName.value = (await checkCurrentNetwork())?.networkName || '';
+      } else {
+        walletAddress.value = '';
+        walletConnected.value = false;
+        networkName.value = '';
+      }
+    });
+    window.ethereum.on('chainChanged', async (_chainId: string) => {
+      // Re-check network and update state
+      const network = await checkCurrentNetwork();
+      networkName.value = network?.networkName || '';
+      // Optionally, disconnect wallet if not on correct network
+      if (!network?.isCorrectNetwork) {
+        walletConnected.value = false;
+        walletAddress.value = '';
+      } else {
+        // Optionally, re-fetch address
+        const client = createWalletClient({ chain: base, transport: custom(window.ethereum) });
+        const accounts = await client.requestAddresses();
+        walletAddress.value = accounts[0] || '';
+        walletConnected.value = !!accounts[0];
+      }
+    });
+    window.ethereum._zoraEventListenersAdded = true;
+  }
 
   return {
     walletConnected: computed(() => walletConnected.value),
@@ -537,7 +569,7 @@ export function useCoinCreation() {
           symbol: coinData.symbol,
           uri: metadataUrl,
           payoutRecipient: walletAddress.value as `0x${string}`,
-          chainId: baseSepolia.id,
+          chainId: base.id,
         };
         // Use viem wallet client to send transaction
         addStatus('Waiting for MetaMask confirmation...');
