@@ -183,7 +183,7 @@ export function useWallet() {
       walletClient.value = createWalletClient({
         chain: base,
         transport: custom(window.ethereum),
-        account: accounts[0],
+        account: accounts[0] as `0x${string}`,
       });
       // Set network name (Base Mainnet)
       networkName.value = 'Base Mainnet';
@@ -249,10 +249,17 @@ export function useWallet() {
         walletAddress.value = accounts[0];
         walletConnected.value = true;
         networkName.value = (await checkCurrentNetwork())?.networkName || '';
+        // Re-create walletClient with the new account
+        walletClient.value = createWalletClient({
+          chain: base,
+          transport: custom(window.ethereum),
+          account: accounts[0] as `0x${string}`,
+        });
       } else {
         walletAddress.value = '';
         walletConnected.value = false;
         networkName.value = '';
+        walletClient.value = null;
       }
     });
     window.ethereum.on('chainChanged', async (_chainId: string) => {
