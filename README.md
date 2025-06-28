@@ -54,7 +54,7 @@ Before deploying, you'll need:
 
 ### Quick Deploy with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/import?repository-url=https://github.com/alekcangp/zora-ai-coin-gallery&env=CLOUDFLARE_ACCOUNT_ID,CLOUDFLARE_API_TOKEN,VITE_ZORA_API_KEY,PINATA_API_KEY,PINATA_API_SECRET&envDescription=Cloudflare%20AI%20API%20credentials%20for%20image%20analysis%20and%20generation&envLink=https://dash.cloudflare.com/profile/api-tokens)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/import?repository-url=https://github.com/alekcangp/zora-ai-coin-gallery&env=CLOUDFLARE_ACCOUNT_ID,CLOUDFLARE_API_TOKEN,VITE_ZORA_API_KEY,PINATA_API_KEY,PINATA_API_SECRET)
 
 **Deployment Steps:**
 1. **Click the "Deploy with Vercel" button above**
