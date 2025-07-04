@@ -39,6 +39,8 @@ A modern application for creating AI-powered cryptocurrencies on the Zora protoc
 
 **Production Site**: [https://zora-ai-coin-gallery.vercel.app/](https://zora-ai-coin-gallery.vercel.app/)
 
+**AI Documentation**: [DeepWiki](https://deepwiki.com/alekcangp/zora-ai-coin-gallery)
+
 ## 📋 Prerequisites
 
 Before deploying, you'll need:
